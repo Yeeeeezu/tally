@@ -8,7 +8,6 @@ program
   .description('terminal todo tracker')
   .version('0.1.0')
 
-// tally add "write tests" -t work
 program
   .command('add <text>')
   .description('add a new item')
@@ -20,7 +19,6 @@ program
     ok(`added #${item.id}`)
   })
 
-// tally check 1 2 3
 program
   .command('check <ids...>')
   .description('mark items done')
@@ -32,7 +30,6 @@ program
     else err('nothing to check')
   })
 
-// tally uncheck 1
 program
   .command('uncheck <ids...>')
   .description('mark items not done')
@@ -44,7 +41,6 @@ program
     else err('nothing to uncheck')
   })
 
-// tally rm 1 2
 program
   .command('rm <ids...>')
   .description('remove items')
@@ -56,7 +52,6 @@ program
     else err('nothing removed')
   })
 
-// tally clean
 program
   .command('clean')
   .description('remove all done items')
@@ -68,23 +63,23 @@ program
     else ok('nothing to clean')
   })
 
-// tally ls / tally ls --done / tally ls -t work
 program
   .command('ls')
   .description('list items (default: open only)')
-  .option('-a, --all',      'show all items')
-  .option('-d, --done',     'show only done items')
+  .option('-a, --all',       'show all items')
+  .option('-d, --done',      'show only done items')
   .option('-t, --tag <tag>', 'filter by tag')
   .action((opts: { all?: boolean; done?: boolean; tag?: string }) => {
     const store = load()
-    let items = opts.all ? store.items : filter(store, { done: opts.done ?? false, tag: opts.tag })
-    if (opts.done) items = filter(store, { done: true, tag: opts.tag })
+    const items = opts.all  ? store.items
+                : opts.done ? filter(store, { done: true,  tag: opts.tag })
+                :             filter(store, { done: false, tag: opts.tag })
     printList(items)
     printSummary(store)
     console.log()
   })
 
-// tally (no args) = ls open
+// bare `tally` = show open items
 program
   .action(() => {
     const store = load()
